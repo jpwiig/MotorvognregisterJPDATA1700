@@ -25,7 +25,8 @@ $(() => {
                 })
             })
         } else {
-            console.log("moscott og dior")
+            console.log("fakker ikke med det")
+            clearreg();
         }
 
     })
@@ -49,24 +50,25 @@ function printBiltype(bilene) {
     }
     ut += "</select>"
     $("#bilType").append(ut);
-
 }
 
+//no scuffed
 function printCar(cars) {
     let ut = "";
     ut += "<table><tr> <th>Personnr</th> <th>navn</th> <th>adresse</th> <th>SkiltNr</th> <th>Merke</th> <th>Type</th><th>slett</th> </tr>"
     for (const newreg of cars) {
-        ut += "<tr><td>" + newreg.personnr + "</td>" + "<td>" + newreg.navn + "</td>" + "<td>" + newreg.adresse + "</td>" + "<td>" + newreg.skiltNr + "</td>" + "<td>" + newreg.bilmerke + "</td>" + "<td>" + newreg.biltype + "</td>" + "<td>" + "<button onclick=slett(this.newreg)>Slett denne</button>" + "</td></tr>"
+        ut += "<tr><td>" + newreg.personnr + "</td>" + "<td>" + newreg.navn + "</td>" + "<td>" + newreg.adresse + "</td>" + "<td>" + newreg.skiltNr + "</td>" + "<td>" + newreg.bilmerke + "</td>" + "<td>" + newreg.biltype + "</td>" + "<td>" + "<button onclick=slett(this.newreg)>Slett denne</button>" + "</td></tr>";
     }
     ut += "</table>"
     $("#Visregister").append(ut);
-
+    clearreg();
 }
 
 function validering(test) {
     const regexppersonnr = /^[0-9]{11}$/;
     const regexpnavn = /^[a-zæøåA-ZÆØÅ. /-]{0,50}$/;
     const regexpadresse = /^[a-zæøåA-ZÆØÅ, 0-9]{0, 50}$/;
+
 
     const personnrok = regexppersonnr.test(test.personnr);
     const navnok = regexpnavn.test(test.navn);
@@ -79,14 +81,14 @@ function validering(test) {
         return false
     }
     if (!navnok) {
-        altok = false;
-        return false
+        return altok = false;
     }
     if (!adresseok) {
-        altok = false;
-        return false
+        return altok = false;
     } else {
         altok = true;
+        return altok;
+        clearreg();
     }
 
 }
@@ -95,10 +97,21 @@ function slett(newreg) {
     const sikker = confirm("er du sikker på at du vil slette");
     if (sikker === true) {
         console.log("start sletting!");
-        //ajax call
+        $.post("/api/deleteone", newreg, () => {
+
+        })
         return true;
     } else {
         return false;
     }
 
+}
+
+function clearreg() {
+    $("#skiltnr").val("");
+    $("#personnr").val("");
+    $("#navn").val("");
+    $("#adresse").val("");
+    $("#bilmerke").select(0);
+    $("#bilType").select(0);
 }

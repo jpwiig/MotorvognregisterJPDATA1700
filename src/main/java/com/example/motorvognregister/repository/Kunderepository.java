@@ -4,12 +4,10 @@ import com.example.motorvognregister.model.Newreg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.tree.ExpandVetoException;
 import java.util.List;
 
 @Repository
@@ -46,11 +44,11 @@ public class Kunderepository {
         }
     }
 
-    public void deleteone(){
+    public void deleteone(Newreg nyreg){
 
         try {
-            String sql="";
-            db.update(sql);
+            String sql="DELETE FROM Reg WHERE personnr = ?";
+            db.update(sql,nyreg.getPersonnr());
         } catch (Exception e){
             logger.error("feil enkelt sletting" + e);
         }
