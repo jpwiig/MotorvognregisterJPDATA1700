@@ -42,7 +42,7 @@ public class Motorvogncontroller {
             if (!Repo.lagreKunde(nyreg)) {
                 response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Feil lagringen av kunde til DB");
             } else {
-                response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Feil i validering, prøv igjen senere");
+                response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Feil i validering på serversiden, prøv igjen senere");
             }
         }
     }
@@ -58,8 +58,12 @@ public class Motorvogncontroller {
     }
 
     @PostMapping("/api/deleteone")
-    public void deleteone() throws IOException {
-        Repo.deleteone();
+    public void deleteone(Newreg nyreg,HttpServletResponse response) throws IOException {
+        try{
+            Repo.deleteone(nyreg);
+        } catch (Exception e){
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "feil i db, prøv igjen senere");
+        }
 
     }
 
