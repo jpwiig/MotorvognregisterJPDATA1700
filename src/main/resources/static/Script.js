@@ -2,6 +2,13 @@ let biler;
 let bilene;
 let cars;
 $(() => {
+    //innlogging
+    let credentials = {
+        username:$("#brukernavn").val(),
+        password: $("#passord").val()
+    };
+
+
     $.get("/api/hentBiler", (biler) => {
         printBilmerke(biler);
         printBiltype(biler);
@@ -20,25 +27,15 @@ $(() => {
         validering(nyreg);
         if (altok) {
             $.post("/api/registere", nyreg, () => {
+                console.log(nyreg)
                 $.get("/api/show", (cars) => {
                     printCar(cars);
-
                 })
             })
             clearreg();
         } else {
             console.log("fakker ikke med det");
         }
-        /* if (!validering(nyreg)) {
-             console.log("fakker ikke med det")
-             clearreg();
-         } else {
-             $.post("/api/registere", nyreg, () => {
-                 $.get("/api/show", (cars) => {
-                     printCar(cars);
-                 })
-             })
-         }*/
 
     })
 
@@ -78,7 +75,7 @@ function validering(test) {
     const regexppersonnr = /^[0-9]{11}$/;
     const regexpnavn = /^[a-zæøåA-ZÆØÅ. /-]{0,50}$/;
     const regexpadresse = /^[a-zæøåA-ZÆØÅ ]+[ 0-9]{0,50}$/;
-    const regexpskiltnr = /^[A-Z    ]{2}[0-9]{6}$/;
+    const regexpskiltnr = /^[A-Z]{2}[0-9]{6}$/;
 
     const personnrok = regexppersonnr.test(test.personnr);
     const navnok = regexpnavn.test(test.navn);
