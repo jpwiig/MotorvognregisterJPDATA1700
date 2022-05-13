@@ -17,3 +17,9 @@ Biltype VARCHAR(255) NOT NULL ,
 Bilmerke VARCHAR(255) NOT NULL ,
 PRIMARY KEY (id)
 );
+
+CREATE TABLE user (
+    id int auto_increment not null,
+    brukernavn VARCHAR (50),
+    lastord VARCHAR (250)
+);
