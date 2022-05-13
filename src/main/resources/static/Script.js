@@ -16,18 +16,29 @@ $(() => {
             navn: $("#navn").val(),
             adresse: $("#adresse").val()
         };
-        console.log(nyreg);
+        console.log(nyreg.adresse)
         validering(nyreg);
-        if (altok === true) {
+        if (altok) {
             $.post("/api/registere", nyreg, () => {
                 $.get("/api/show", (cars) => {
                     printCar(cars);
+
                 })
             })
-        } else {
-            console.log("fakker ikke med det")
             clearreg();
+        } else {
+            console.log("fakker ikke med det");
         }
+        /* if (!validering(nyreg)) {
+             console.log("fakker ikke med det")
+             clearreg();
+         } else {
+             $.post("/api/registere", nyreg, () => {
+                 $.get("/api/show", (cars) => {
+                     printCar(cars);
+                 })
+             })
+         }*/
 
     })
 
@@ -61,34 +72,47 @@ function printCar(cars) {
     }
     ut += "</table>"
     $("#Visregister").append(ut);
-    clearreg();
 }
 
 function validering(test) {
     const regexppersonnr = /^[0-9]{11}$/;
     const regexpnavn = /^[a-zæøåA-ZÆØÅ. /-]{0,50}$/;
-    const regexpadresse = /^[a-zæøåA-ZÆØÅ, 0-9]{0, 50}$/;
-
+    const regexpadresse = /^[a-zæøåA-ZÆØÅ ]+[ 0-9]{0,50}$/;
+    const regexpskiltnr = /^[A-Z    ]{2}[0-9]{6}$/;
 
     const personnrok = regexppersonnr.test(test.personnr);
     const navnok = regexpnavn.test(test.navn);
     const adresseok = regexpadresse.test(test.adresse);
-    altok = false;
-    if (!personnrok) {
-        altok = false;
-        const personfeil = "skriv inn riktig personnr"
-        $("#personnr").append(personfeil);
-        return false
-    }
-    if (!navnok) {
-        return altok = false;
-    }
-    if (!adresseok) {
-        return altok = false;
+    const skiltnummerok = regexpskiltnr.test(test.skiltNr);
+
+    if (!personnrok || !navnok || !adresseok || !skiltnummerok){
+        if (!personnrok) {
+            altok = false;
+            console.log("alt er ikke riktig - personnr")
+            const personfeil = "skriv inn riktig personnr"
+            $("#personnr").append(personfeil);
+            return altok;
+        }
+        if (!navnok) {
+            console.log("alt er ikke riktig - navn")
+            altok = false;
+            return altok;
+        }
+        if (!adresseok) {
+            console.log("alt er ikke riktig - adresse")
+            altok = false;
+            return altok;
+        }
+        if (!skiltnummerok) {
+            console.log("alt er ikkke riktig - skiltnummer")
+            altok = false;
+            return altok;
+        }
     } else {
         altok = true;
-        return altok;
         clearreg();
+        console.log("alt er riktig - altok")
+        return altok;
     }
 
 }
